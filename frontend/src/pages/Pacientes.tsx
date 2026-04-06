@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import PacienteCard from '../components/PacienteCard';
+import NuevoPacienteModal from '../components/NuevoPacienteModal';
 
 interface Paciente {
   id: number;
@@ -30,6 +31,8 @@ export default function Pacientes() {
   const [busqueda, setBusqueda] = useState('');
   const [filtroEspecie, setFiltroEspecie] = useState('Todos');
   const [cargando, setCargando] = useState(false);
+  const [modalAbierto, setModalAbierto] = useState(false);
+  const [reloadKey, setReloadKey] = useState(0);
 
   useEffect(() => {
     const cargar = async () => {
@@ -50,7 +53,7 @@ export default function Pacientes() {
     };
     const timer = setTimeout(cargar, 300);
     return () => clearTimeout(timer);
-  }, [busqueda]);
+  }, [busqueda, reloadKey]);
 
   const pacientesFiltrados = pacientes.filter(p =>
     (filtroEspecie === 'Todos' || p.especie === filtroEspecie) &&
@@ -58,7 +61,17 @@ export default function Pacientes() {
      p.dueño.toLowerCase().includes(busqueda.toLowerCase()))
   );
 
+  const recargarPacientes = () => {
+    setReloadKey(k => k + 1);
+  };
+
   return (
+    <>
+    <NuevoPacienteModal
+      abierto={modalAbierto}
+      onCerrar={() => setModalAbierto(false)}
+      onCreado={recargarPacientes}
+    />
     <div style={{ maxWidth: 'var(--ancho-contenido-max)', margin: '0 auto' }}>
       {/* Cabecera */}
       <div style={{
@@ -83,14 +96,16 @@ export default function Pacientes() {
             {filtroEspecie !== 'Todos' ? ` · ${filtroEspecie}` : ''}
           </p>
         </div>
-        <button style={{
-          display: 'flex', alignItems: 'center', gap: 'var(--esp-2)',
-          padding: 'var(--esp-2) var(--esp-4)',
-          background: 'var(--verde-600)', color: 'white',
-          border: 'none', borderRadius: 'var(--radio-md)',
-          fontSize: 'var(--texto-sm)', fontWeight: 'var(--peso-semibold)',
-          cursor: 'pointer',
-        }}>
+        <button
+          onClick={() => setModalAbierto(true)}
+          style={{
+            display: 'flex', alignItems: 'center', gap: 'var(--esp-2)',
+            padding: 'var(--esp-2) var(--esp-4)',
+            background: 'var(--verde-600)', color: 'white',
+            border: 'none', borderRadius: 'var(--radio-md)',
+            fontSize: 'var(--texto-sm)', fontWeight: 'var(--peso-semibold)',
+            cursor: 'pointer',
+          }}>
           + Nuevo paciente
         </button>
       </div>
@@ -193,5 +208,6 @@ export default function Pacientes() {
         </div>
       )}
     </div>
+    </>
   );
 }

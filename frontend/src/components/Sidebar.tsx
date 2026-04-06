@@ -1,4 +1,7 @@
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+
+interface UsuarioLocal { nombre: string; apellido: string; email: string; rol: string; }
 
 const navItems = [
   {
@@ -53,6 +56,26 @@ const navItems = [
 ];
 
 export default function Sidebar() {
+  const navigate = useNavigate();
+  const [usuario, setUsuario] = useState<UsuarioLocal | null>(null);
+
+  useEffect(() => {
+    const raw = localStorage.getItem('usuario');
+    if (raw) {
+      try { setUsuario(JSON.parse(raw)); } catch { /* ignorar */ }
+    }
+  }, []);
+
+  const logout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('usuario');
+    navigate('/login', { replace: true });
+  };
+
+  const inicial = usuario ? usuario.nombre.charAt(0).toUpperCase() : 'U';
+  const nombreCompleto = usuario ? `${usuario.nombre} ${usuario.apellido}` : '—';
+  const rolLabel = usuario?.rol ?? '—';
+
   return (
     <aside style={{
       width: 'var(--ancho-sidebar)',
@@ -147,44 +170,72 @@ export default function Sidebar() {
         </ul>
       </nav>
 
-      {/* Usuario */}
+      {/* Usuario + logout */}
       <div style={{
         padding: 'var(--esp-3) var(--esp-4)',
         borderTop: '1px solid var(--borde-sutil)',
-        display: 'flex',
-        alignItems: 'center',
-        gap: 'var(--esp-3)',
       }}>
-        <div style={{
-          width: 32, height: 32,
-          borderRadius: 'var(--radio-full)',
-          background: 'var(--verde-200)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          fontSize: 'var(--texto-sm)',
-          fontWeight: 'var(--peso-semibold)',
-          color: 'var(--verde-700)',
-          flexShrink: 0,
-        }}>
-          A
-        </div>
-        <div style={{ minWidth: 0 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--esp-3)', marginBottom: 'var(--esp-2)' }}>
           <div style={{
+            width: 32, height: 32,
+            borderRadius: 'var(--radio-full)',
+            background: 'var(--verde-200)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
             fontSize: 'var(--texto-sm)',
-            fontWeight: 'var(--peso-medio)',
-            color: 'var(--ink-primario)',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            whiteSpace: 'nowrap',
+            fontWeight: 'var(--peso-semibold)',
+            color: 'var(--verde-700)',
+            flexShrink: 0,
           }}>
-            Admin
+            {inicial}
           </div>
-          <div style={{
-            fontSize: 'var(--texto-xs)',
-            color: 'var(--ink-terciario)',
-          }}>
-            Administrador
+          <div style={{ minWidth: 0 }}>
+            <div style={{
+              fontSize: 'var(--texto-sm)',
+              fontWeight: 'var(--peso-medio)',
+              color: 'var(--ink-primario)',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+            }}>
+              {nombreCompleto}
+            </div>
+            <div style={{ fontSize: 'var(--texto-xs)', color: 'var(--ink-terciario)' }}>
+              {rolLabel}
+            </div>
           </div>
         </div>
+
+        <button
+          onClick={logout}
+          style={{
+            width: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 'var(--esp-2)',
+            padding: 'var(--esp-2) var(--esp-3)',
+            border: '1px solid var(--borde-sutil)',
+            borderRadius: 'var(--radio-md)',
+            background: 'transparent',
+            color: 'var(--ink-terciario)',
+            fontSize: 'var(--texto-xs)',
+            cursor: 'pointer',
+            transition: 'color var(--transicion-rapida), border-color var(--transicion-rapida)',
+          }}
+          onMouseEnter={e => {
+            (e.currentTarget as HTMLButtonElement).style.color = '#C53030';
+            (e.currentTarget as HTMLButtonElement).style.borderColor = '#C53030';
+          }}
+          onMouseLeave={e => {
+            (e.currentTarget as HTMLButtonElement).style.color = 'var(--ink-terciario)';
+            (e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--borde-sutil)';
+          }}
+        >
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+            <polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
+          </svg>
+          Cerrar sesión
+        </button>
       </div>
     </aside>
   );

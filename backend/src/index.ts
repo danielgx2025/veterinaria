@@ -8,6 +8,8 @@ import clientesRoutes from './routes/clientes';
 import consultasRoutes from './routes/consultas';
 import facturacionRoutes from './routes/facturacion';
 import dashboardRoutes from './routes/dashboard';
+import catalogosRoutes from './routes/catalogos';
+import citasRoutes from './routes/citas';
 
 dotenv.config();
 
@@ -24,6 +26,8 @@ app.use('/api/clientes',  clientesRoutes);
 app.use('/api/consultas', consultasRoutes);
 app.use('/api/facturas',  facturacionRoutes);
 app.use('/api/dashboard', dashboardRoutes);
+app.use('/api/catalogos', catalogosRoutes);
+app.use('/api/citas',     citasRoutes);
 
 // Health check
 app.get('/health', (_req, res) => res.json({ status: 'ok', timestamp: new Date() }));

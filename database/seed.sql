@@ -104,7 +104,7 @@ WHERE r.nombre = 'Recepcionista';
 -- -----------------------------------------------------------------------------
 INSERT INTO usuarios (rol_id, nombre, apellido, email, password_hash, telefono)
 SELECT id, 'Administrador', 'Sistema', 'admin@veterinaria.com',
-       '$2b$12$LRtJEbEHFNpRBx0VvkBOIOQe2s/7xhLl4bUHPJj5b7kFtFCNY7dK2',
+       '$2b$12$seYW.0fgdZ7NsW1yjiV3YuQ8rFCR3Cm5VYaAz9/w0PFIZPPvf2Rqi',
        '+1-000-000-0000'
 FROM roles WHERE nombre = 'Admin';
 
