@@ -1,0 +1,27 @@
+User-agent: *
+
+# Bloquear rutas de aplicación (no son páginas públicas)
+Disallow: /api/
+Disallow: /dashboard/
+Disallow: /pacientes/
+Disallow: /consultas/
+Disallow: /facturacion/
+Disallow: /citas/
+Disallow: /admin/
+
+# Permitir páginas públicas
+Allow: /
+Allow: /servicios/
+Allow: /contacto/
+Allow: /blog/
+Allow: /sobre-nosotros/
+
+# Sitemap
+Sitemap: https://vetsystem.app/sitemap.xml
+
+# Crawl-delay amigable para bots menos importantes
+User-agent: AhrefsBot
+Crawl-delay: 10
+
+User-agent: SemrushBot
+Crawl-delay: 10

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- ============================================================
+       SEO — Título y descripción optimizados (50-60 / 150-160 chars)
+       ============================================================ -->
+  <title>VetSystem — Sistema de Gestión Veterinaria Integral</title>
+  <meta name="description"
+        content="Software veterinario para clínicas modernas. Gestión de pacientes, historiales clínicos, vacunas, facturación y agenda en un solo sistema. Prueba gratis." />
+  <meta name="keywords"
+        content="software veterinario, gestión clínica veterinaria, sistema veterinario, historial médico mascotas, vacunación mascotas, agenda veterinaria" />
+  <meta name="author" content="VetSystem" />
+  <link rel="canonical" href="https://vetsystem.app/" />
+
+  <!-- ============================================================
+       Open Graph — redes sociales
+       ============================================================ -->
+  <meta property="og:type"        content="website" />
+  <meta property="og:url"         content="https://vetsystem.app/" />
+  <meta property="og:title"       content="VetSystem — Gestión Veterinaria Profesional" />
+  <meta property="og:description" content="Gestiona tu clínica veterinaria desde un solo lugar. Pacientes, consultas, vacunas, farmacia y facturación." />
+  <meta property="og:image"       content="https://vetsystem.app/og-image.jpg" />
+  <meta property="og:locale"      content="es_ES" />
+  <meta property="og:site_name"   content="VetSystem" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card"        content="summary_large_image" />
+  <meta name="twitter:title"       content="VetSystem — Sistema de Gestión Veterinaria" />
+  <meta name="twitter:description" content="Software para clínicas veterinarias. Todo en uno: pacientes, agenda, farmacia y facturación." />
+  <meta name="twitter:image"       content="https://vetsystem.app/og-image.jpg" />
+
+  <!-- ============================================================
+       Seguridad
+       ============================================================ -->
+  <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+  <meta http-equiv="X-Frame-Options" content="DENY" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+
+  <!-- ============================================================
+       Rendimiento — preload de fuentes críticas
+       ============================================================ -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preload" as="style"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,400;9..144,600&display=swap" />
+  <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,400;9..144,600&display=swap" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <meta name="theme-color" content="#2A7A52" />
+
+  <!-- ============================================================
+       Schema Markup — LocalBusiness + VeterinaryCare
+       ============================================================ -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": ["LocalBusiness", "VeterinaryCare"],
+    "name": "Clínica Veterinaria VetSystem",
+    "description": "Sistema integral de gestión para clínicas veterinarias. Atendemos perros, gatos y animales exóticos.",
+    "url": "https://vetsystem.app",
+    "logo": "https://vetsystem.app/logo.png",
+    "image": "https://vetsystem.app/clinic-photo.jpg",
+    "telephone": "+1-000-000-0000",
+    "email": "contacto@vetsystem.app",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Calle Principal 123",
+      "addressLocality": "Ciudad",
+      "addressRegion": "Estado",
+      "postalCode": "00000",
+      "addressCountry": "MX"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": "0.0000",
+      "longitude": "0.0000"
+    },
+    "openingHoursSpecification": [
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"],
+        "opens": "08:00",
+        "closes": "18:00"
+      },
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": "Saturday",
+        "opens": "09:00",
+        "closes": "14:00"
+      }
+    ],
+    "priceRange": "$$",
+    "currenciesAccepted": "MXN, USD",
+    "paymentAccepted": "Cash, Credit Card, Debit Card",
+    "hasOfferCatalog": {
+      "@type": "OfferCatalog",
+      "name": "Servicios Veterinarios",
+      "itemListElement": [
+        {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Consulta General"}},
+        {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Vacunación"}},
+        {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Cirugía"}},
+        {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Laboratorio Clínico"}},
+        {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Estética y Peluquería"}}
+      ]
+    },
+    "sameAs": [
+      "https://www.facebook.com/vetsystem",
+      "https://www.instagram.com/vetsystem",
+      "https://g.co/kgs/vetsystem"
+    ]
+  }
+  </script>
+
+  <!-- SoftwareApplication schema para el sistema en sí -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "VetSystem",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "Web",
+    "description": "Software de gestión veterinaria con módulos de pacientes, agenda, facturación y farmacia.",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD",
+      "description": "Prueba gratuita disponible"
+    }
+  }
+  </script>
+
+  <!-- CSS crítico inline para evitar FOUC -->
+  <style>
+    html { background: #F8FAF9; }
+    body { margin: 0; font-family: 'Inter', system-ui, sans-serif; }
+    #root { min-height: 100vh; }
+    /* Loading spinner inicial */
+    .app-loading {
+      display: flex; align-items: center; justify-content: center;
+      height: 100vh; background: #F8FAF9;
+    }
+    .app-loading::after {
+      content: '';
+      width: 32px; height: 32px;
+      border: 3px solid #D6EDE2;
+      border-top-color: #2A7A52;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <div id="root">
+    <!-- Spinner visible hasta que React hidrate -->
+    <div class="app-loading" aria-label="Cargando VetSystem..." role="status"></div>
+  </div>
+  <script type="module" src="/src/main.tsx"></script>
+</body>
+</html>

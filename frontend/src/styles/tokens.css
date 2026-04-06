@@ -1,0 +1,266 @@
+/*
+ * SISTEMA DE DISEÑO — VETERINARIA
+ * Paleta derivada del mundo físico de una clínica veterinaria moderna:
+ * paredes blancas esterilizadas, plantas medicinales, pelajes cálidos,
+ * instrumental de acero, luz natural filtrada.
+ *
+ * Token test: ¿Suenan a clínica veterinaria?
+ * --verde-clinica        → la pared verde pálida de la sala de espera
+ * --ambar-pelaje         → el color del pelaje dorado de un Labrador
+ * --azul-diagnostico     → la camisa del veterinario, el archivador de fichas
+ * --marfil               → la mesa de exploración, las paredes limpias
+ * --verde-salvia         → las plantas en la sala de espera
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&display=swap');
+
+:root {
+  /* =========================================================
+   * PRIMITIVOS DE COLOR
+   * ========================================================= */
+
+  /* Verde clínica — color de marca principal */
+  --verde-100: #F0F7F3;
+  --verde-200: #D6EDE2;
+  --verde-300: #A8D4BC;
+  --verde-400: #7CAF8E;  /* verde-salvia */
+  --verde-500: #4A9068;
+  --verde-600: #2A7A52;  /* verde-clinica principal */
+  --verde-700: #1F5C3D;
+  --verde-800: #163F2B;
+  --verde-900: #0C2418;
+
+  /* Ámbar pelaje — acento cálido */
+  --ambar-100: #FEF3E2;
+  --ambar-200: #FDE3B4;
+  --ambar-300: #F9C06A;
+  --ambar-400: #F4A020;
+  --ambar-500: #D4850A;
+  --ambar-600: #A6650A;
+  --ambar-700: #7A490A;
+
+  /* Azul diagnóstico — estados de información */
+  --azul-100: #E8F1F8;
+  --azul-200: #C0D8ED;
+  --azul-300: #85B4D9;
+  --azul-400: #4D8FBF;
+  --azul-500: #2C5F8A;
+  --azul-600: #1E4266;
+  --azul-700: #132D47;
+
+  /* Rojo urgencia */
+  --rojo-100: #FEE8E8;
+  --rojo-300: #F08080;
+  --rojo-500: #C53030;
+  --rojo-700: #822020;
+
+  /* Neutros — base marfil, no gris puro */
+  --neutro-50:  #FAFCFB;
+  --neutro-100: #F2F7F4;  /* superficie elevada */
+  --neutro-200: #E5EEE9;
+  --neutro-300: #C8D9CE;
+  --neutro-400: #A0B5A8;
+  --neutro-500: #6E8C7A;
+  --neutro-600: #4A6058;
+  --neutro-700: #2E3D36;
+  --neutro-800: #1A2520;
+  --neutro-900: #0D1410;
+
+
+  /* =========================================================
+   * TOKENS SEMÁNTICOS — TEXTO
+   * ========================================================= */
+  --ink-primario:   var(--neutro-800);   /* texto principal */
+  --ink-secundario: var(--neutro-600);   /* etiquetas, subtítulos */
+  --ink-terciario:  var(--neutro-500);   /* metadatos, captions */
+  --ink-muted:      var(--neutro-400);   /* placeholders, deshabilitado */
+  --ink-inverso:    #FFFFFF;
+  --ink-marca:      var(--verde-600);
+  --ink-alerta:     var(--rojo-600, #B91C1C);
+  --ink-exito:      var(--verde-700);
+  --ink-advertencia: var(--ambar-600);
+  --ink-info:       var(--azul-500);
+
+
+  /* =========================================================
+   * TOKENS SEMÁNTICOS — SUPERFICIES (elevation)
+   * ========================================================= */
+  --superficie-canvas:  var(--neutro-50);    /* fondo de página */
+  --superficie-base:    #FFFFFF;             /* cards, panels */
+  --superficie-elevada: var(--neutro-100);   /* inputs, hover states */
+  --superficie-alta:    var(--neutro-200);   /* dropdowns, popovers */
+  --superficie-marca:   var(--verde-600);    /* botón primario, nav activo */
+  --superficie-marca-suave: var(--verde-100); /* badges, tags de marca */
+  --superficie-alerta:  var(--rojo-100);
+  --superficie-exito:   #EBF5EE;
+  --superficie-advertencia: var(--ambar-100);
+  --superficie-info:    var(--azul-100);
+
+
+  /* =========================================================
+   * TOKENS SEMÁNTICOS — BORDES
+   * ========================================================= */
+  --borde-sutil:   rgba(42, 122, 82, 0.10);  /* separaciones suaves */
+  --borde-normal:  rgba(42, 122, 82, 0.18);  /* bordes de card */
+  --borde-enfasis: rgba(42, 122, 82, 0.35);  /* bordes activos */
+  --borde-focus:   var(--verde-600);         /* anillo de foco (accesibilidad) */
+  --borde-alerta:  rgba(197, 48, 48, 0.35);
+  --borde-control: var(--neutro-300);        /* bordes de inputs */
+
+
+  /* =========================================================
+   * TOKENS — CONTROLES (inputs, selects, buttons)
+   * ========================================================= */
+  --control-fondo:        var(--neutro-100);
+  --control-fondo-hover:  var(--neutro-200);
+  --control-borde:        var(--neutro-300);
+  --control-borde-focus:  var(--verde-600);
+  --control-texto:        var(--ink-primario);
+  --control-placeholder:  var(--ink-muted);
+
+
+  /* =========================================================
+   * ACENTOS POR ESPECIE (para tarjetas de paciente)
+   * ========================================================= */
+  --especie-perro:   #D4850A;   /* ámbar cálido */
+  --especie-gato:    #6B48B8;   /* índigo */
+  --especie-ave:     #0891B2;   /* cian */
+  --especie-conejo:  #DB6A8C;   /* rosa coral */
+  --especie-hamster: #7C6F5B;   /* arena */
+  --especie-reptil:  #4D7C0F;   /* verde musgo */
+  --especie-pez:     #0369A1;   /* azul profundo */
+  --especie-exotico: #C2410C;   /* naranja quemado */
+
+
+  /* =========================================================
+   * TIPOGRAFÍA
+   * ========================================================= */
+  --fuente-ui:       'Inter', system-ui, -apple-system, sans-serif;
+  --fuente-display:  'Fraunces', Georgia, serif;  /* headlines de sección */
+  --fuente-mono:     'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+
+  /* Escala tipográfica */
+  --texto-xs:    0.75rem;    /* 12px — labels pequeños, badges */
+  --texto-sm:    0.875rem;   /* 14px — metadatos, captions */
+  --texto-base:  1rem;       /* 16px — cuerpo principal */
+  --texto-md:    1.0625rem;  /* 17px — texto ligeramente destacado */
+  --texto-lg:    1.125rem;   /* 18px — subtítulos de card */
+  --texto-xl:    1.25rem;    /* 20px — títulos de sección */
+  --texto-2xl:   1.5rem;     /* 24px — títulos de página */
+  --texto-3xl:   1.875rem;   /* 30px — headline principal */
+  --texto-4xl:   2.25rem;    /* 36px — KPIs grandes */
+
+  /* Pesos */
+  --peso-normal:    400;
+  --peso-medio:     500;
+  --peso-semibold:  600;
+  --peso-bold:      700;
+
+  /* Tracking */
+  --tracking-apretado:  -0.025em;
+  --tracking-normal:     0;
+  --tracking-amplio:     0.03em;
+  --tracking-muy-amplio: 0.08em;  /* labels en mayúsculas */
+
+  /* Interlineado */
+  --leading-ajustado:  1.2;
+  --leading-normal:    1.5;
+  --leading-relajado:  1.7;
+
+
+  /* =========================================================
+   * ESPACIADO — base 4px
+   * ========================================================= */
+  --esp-1:   0.25rem;   /* 4px  — gap de íconos */
+  --esp-2:   0.5rem;    /* 8px  — separación micro */
+  --esp-3:   0.75rem;   /* 12px — padding inline */
+  --esp-4:   1rem;      /* 16px — padding estándar */
+  --esp-5:   1.25rem;   /* 20px */
+  --esp-6:   1.5rem;    /* 24px — espaciado de sección */
+  --esp-8:   2rem;      /* 32px — separación mayor */
+  --esp-10:  2.5rem;    /* 40px */
+  --esp-12:  3rem;      /* 48px — márgenes grandes */
+  --esp-16:  4rem;      /* 64px — secciones de página */
+
+
+  /* =========================================================
+   * RADIOS DE BORDE
+   * ========================================================= */
+  --radio-sm:   4px;    /* inputs, badges */
+  --radio-md:   8px;    /* cards, botones */
+  --radio-lg:   12px;   /* cards grandes, modales */
+  --radio-xl:   16px;   /* paneles */
+  --radio-full: 9999px; /* pills, avatares */
+
+
+  /* =========================================================
+   * SOMBRAS — estrategia: surface color shifts (sin sombras dramáticas)
+   * Usamos sombra sutil solo donde hay elevación real
+   * ========================================================= */
+  --sombra-sm:  0 1px 2px rgba(13, 20, 16, 0.04);
+  --sombra-md:  0 1px 3px rgba(13, 20, 16, 0.06), 0 1px 2px rgba(13, 20, 16, 0.04);
+  --sombra-lg:  0 4px 6px rgba(13, 20, 16, 0.05), 0 2px 4px rgba(13, 20, 16, 0.04);
+  --sombra-xl:  0 8px 16px rgba(13, 20, 16, 0.06);
+
+
+  /* =========================================================
+   * ANIMACIÓN
+   * ========================================================= */
+  --transicion-rapida:  80ms ease-out;
+  --transicion-normal:  150ms ease-out;
+  --transicion-lenta:   250ms ease-out;
+
+
+  /* =========================================================
+   * LAYOUT
+   * ========================================================= */
+  --ancho-sidebar:       240px;
+  --ancho-sidebar-mini:  64px;
+  --alto-header:         56px;
+  --ancho-contenido-max: 1280px;
+}
+
+
+/* =========================================================
+ * RESET BASE
+ * ========================================================= */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--fuente-ui);
+  font-size: var(--texto-base);
+  line-height: var(--leading-normal);
+  color: var(--ink-primario);
+  background-color: var(--superficie-canvas);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Anillo de foco accesible */
+:focus-visible {
+  outline: 2px solid var(--borde-focus);
+  outline-offset: 2px;
+  border-radius: var(--radio-sm);
+}
+
+/* Texto monoespaciado para métricas y números */
+.mono, [data-tipo="metrica"] {
+  font-family: var(--fuente-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Display headings */
+.display {
+  font-family: var(--fuente-display);
+  letter-spacing: var(--tracking-apretado);
+}
