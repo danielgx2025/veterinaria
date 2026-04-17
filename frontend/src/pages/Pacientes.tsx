@@ -40,7 +40,9 @@ export default function Pacientes() {
         setCargando(true);
         const params = new URLSearchParams();
         if (busqueda) params.set('q', busqueda);
-        const res = await fetch(`/api/pacientes?${params}`);
+        const token = localStorage.getItem('token');
+        const headers: HeadersInit = token ? { Authorization: `Bearer ${token}` } : {};
+        const res = await fetch(`/api/pacientes?${params}`, { headers });
         if (res.ok) {
           const datos = await res.json();
           setPacientes(datos.data ?? PACIENTES_EJEMPLO);

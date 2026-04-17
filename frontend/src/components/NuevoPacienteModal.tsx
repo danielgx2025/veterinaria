@@ -109,6 +109,29 @@ const errorTxt: React.CSSProperties = {
   margin: '3px 0 0',
 };
 
+const SectionTitle = ({ children }: { children: React.ReactNode }) => (
+  <p style={{
+    fontSize: 'var(--texto-xs)', fontWeight: 700,
+    color: 'var(--ink-muted)', letterSpacing: '0.08em',
+    textTransform: 'uppercase',
+    margin: 'var(--esp-5) 0 var(--esp-3)',
+    paddingBottom: 'var(--esp-2)',
+    borderBottom: '1px solid var(--borde-sutil)',
+  }}>{children}</p>
+);
+
+const Campo = ({ label, error, children }: { label: string; error?: string; children: React.ReactNode }) => (
+  <div style={{ marginBottom: 'var(--esp-4)' }}>
+    <p style={labelTxt}>{label}</p>
+    {children}
+    {error && <p style={errorTxt}>{error}</p>}
+  </div>
+);
+
+const Fila = ({ children }: { children: React.ReactNode }) => (
+  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--esp-3)' }}>{children}</div>
+);
+
 export default function NuevoPacienteModal({ abierto, onCerrar, onCreado }: NuevoPacienteModalProps) {
   const [form, setForm] = useState<FormPaciente>(FORMA_VACIA);
   const [errores, setErrores] = useState<Partial<Record<keyof FormPaciente, string>>>({});
@@ -219,30 +242,6 @@ export default function NuevoPacienteModal({ abierto, onCerrar, onCreado }: Nuev
       setEnviando(false);
     }
   };
-
-  /* ── helpers de layout ─────────────────────────────────── */
-  const SectionTitle = ({ children }: { children: React.ReactNode }) => (
-    <p style={{
-      fontSize: 'var(--texto-xs)', fontWeight: 700,
-      color: 'var(--ink-muted)', letterSpacing: '0.08em',
-      textTransform: 'uppercase',
-      margin: 'var(--esp-5) 0 var(--esp-3)',
-      paddingBottom: 'var(--esp-2)',
-      borderBottom: '1px solid var(--borde-sutil)',
-    }}>{children}</p>
-  );
-
-  const Campo = ({ label, error, children }: { label: string; error?: string; children: React.ReactNode }) => (
-    <div style={{ marginBottom: 'var(--esp-4)' }}>
-      <p style={labelTxt}>{label}</p>
-      {children}
-      {error && <p style={errorTxt}>{error}</p>}
-    </div>
-  );
-
-  const Fila = ({ children }: { children: React.ReactNode }) => (
-    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--esp-3)' }}>{children}</div>
-  );
 
   /* ── render ────────────────────────────────────────────── */
   return (

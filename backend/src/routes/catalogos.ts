@@ -44,7 +44,7 @@ router.get('/veterinarios', verificarToken,
 router.get('/servicios', verificarToken,
   async (_req: Request, res: Response): Promise<void> => {
     const resultado = await pool.query(
-      `SELECT id, nombre, precio, duracion_minutos FROM servicios WHERE activo = TRUE ORDER BY nombre`
+      `SELECT id, nombre, precio_base AS precio, duracion_minutos FROM servicios WHERE activo = TRUE ORDER BY nombre`
     );
     res.json(resultado.rows);
   }
