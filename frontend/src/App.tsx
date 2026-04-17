@@ -8,6 +8,7 @@ import Pacientes from './pages/Pacientes';
 import Consultas from './pages/Consultas';
 import Facturacion from './pages/Facturacion';
 import Citas from './pages/Citas';
+import Clientes from './pages/Clientes';
 
 export default function App() {
   return (
@@ -43,6 +44,7 @@ export default function App() {
                     <Route path="/consultas"   element={<Consultas />} />
                     <Route path="/facturacion" element={<Facturacion />} />
                     <Route path="/citas"       element={<Citas />} />
+                    <Route path="/clientes"   element={<Clientes />} />
                   </Routes>
                 </main>
               </div>
