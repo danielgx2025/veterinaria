@@ -81,8 +81,13 @@ router.post('/', verificarToken, requierePermiso('consultas', 'crear'),
       paciente_id, servicio_id, cita_id, motivo_consulta, anamnesis,
       examen_fisico, diagnostico, diagnostico_cie, tratamiento, indicaciones,
       observaciones, peso_al_consulta, temperatura_c, frecuencia_cardiaca,
-      frecuencia_respiratoria
+      frecuencia_respiratoria, estado
     } = req.body;
+
+    if (!paciente_id || !motivo_consulta?.trim()) {
+      res.status(400).json({ error: 'paciente_id y motivo_consulta son obligatorios' });
+      return;
+    }
 
     const veterinario_id = req.usuario!.userId;
 
@@ -91,23 +96,65 @@ router.post('/', verificarToken, requierePermiso('consultas', 'crear'),
          (paciente_id, veterinario_id, cita_id, servicio_id, motivo_consulta,
           anamnesis, examen_fisico, diagnostico, diagnostico_cie, tratamiento,
           indicaciones, observaciones, peso_al_consulta, temperatura_c,
-          frecuencia_cardiaca, frecuencia_respiratoria)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16)
+          frecuencia_cardiaca, frecuencia_respiratoria, estado)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17)
        RETURNING *`,
-      [paciente_id, veterinario_id, cita_id, servicio_id, motivo_consulta,
-       anamnesis, examen_fisico, diagnostico, diagnostico_cie, tratamiento,
-       indicaciones, observaciones, peso_al_consulta, temperatura_c,
-       frecuencia_cardiaca, frecuencia_respiratoria]
+      [paciente_id, veterinario_id, cita_id || null, servicio_id || null,
+       motivo_consulta.trim(), anamnesis || null, examen_fisico || null,
+       diagnostico || null, diagnostico_cie || null, tratamiento || null,
+       indicaciones || null, observaciones || null,
+       peso_al_consulta || null, temperatura_c || null,
+       frecuencia_cardiaca || null, frecuencia_respiratoria || null,
+       estado || 'en_curso']
     );
 
-    // Registrar en historial clínico automáticamente
     await pool.query(
       `INSERT INTO historial_clinico (paciente_id, consulta_id, tipo_evento, descripcion)
        VALUES ($1, $2, 'consulta', $3)`,
-      [paciente_id, resultado.rows[0].id, `Consulta: ${motivo_consulta}`]
+      [paciente_id, resultado.rows[0].id, `Consulta: ${motivo_consulta.trim()}`]
     );
 
     res.status(201).json(resultado.rows[0]);
+  }
+);
+
+// PUT /api/consultas/:id
+router.put('/:id', verificarToken, requierePermiso('consultas', 'editar'),
+  async (req: Request, res: Response): Promise<void> => {
+    const {
+      servicio_id, motivo_consulta, anamnesis, examen_fisico, diagnostico,
+      diagnostico_cie, tratamiento, indicaciones, observaciones, estado,
+      peso_al_consulta, temperatura_c, frecuencia_cardiaca, frecuencia_respiratoria
+    } = req.body;
+
+    if (!motivo_consulta?.trim()) {
+      res.status(400).json({ error: 'motivo_consulta es obligatorio' });
+      return;
+    }
+
+    const resultado = await pool.query(
+      `UPDATE consultas SET
+         servicio_id = $1, motivo_consulta = $2, anamnesis = $3,
+         examen_fisico = $4, diagnostico = $5, diagnostico_cie = $6,
+         tratamiento = $7, indicaciones = $8, observaciones = $9,
+         estado = $10, peso_al_consulta = $11, temperatura_c = $12,
+         frecuencia_cardiaca = $13, frecuencia_respiratoria = $14
+       WHERE id = $15 AND activo = TRUE
+       RETURNING *`,
+      [servicio_id || null, motivo_consulta.trim(), anamnesis || null,
+       examen_fisico || null, diagnostico || null, diagnostico_cie || null,
+       tratamiento || null, indicaciones || null, observaciones || null,
+       estado || 'en_curso',
+       peso_al_consulta || null, temperatura_c || null,
+       frecuencia_cardiaca || null, frecuencia_respiratoria || null,
+       req.params.id]
+    );
+
+    if (!resultado.rows[0]) {
+      res.status(404).json({ error: 'Consulta no encontrada' });
+      return;
+    }
+    res.json(resultado.rows[0]);
   }
 );
 
@@ -125,6 +172,23 @@ router.patch('/:id/completar', verificarToken, requierePermiso('consultas', 'edi
       return;
     }
     res.json(resultado.rows[0]);
+  }
+);
+
+// PATCH /api/consultas/:id/desactivar
+router.patch('/:id/desactivar', verificarToken, requierePermiso('consultas', 'editar'),
+  async (req: Request, res: Response): Promise<void> => {
+    const resultado = await pool.query(
+      `UPDATE consultas SET activo = FALSE
+       WHERE id = $1 AND activo = TRUE RETURNING id`,
+      [req.params.id]
+    );
+
+    if (!resultado.rows[0]) {
+      res.status(404).json({ error: 'Consulta no encontrada' });
+      return;
+    }
+    res.json({ ok: true });
   }
 );
 

@@ -175,4 +175,20 @@ router.post('/:id/pagos', verificarToken, requierePermiso('facturas', 'crear'),
   }
 );
 
+// PATCH /api/facturas/:id/anular
+router.patch('/:id/anular', verificarToken, requierePermiso('facturas', 'editar'),
+  async (req: Request, res: Response): Promise<void> => {
+    const resultado = await pool.query(
+      `UPDATE facturas SET estado = 'anulada'
+       WHERE id = $1 AND activo = TRUE AND estado != 'anulada' RETURNING id`,
+      [req.params.id]
+    );
+    if (!resultado.rows[0]) {
+      res.status(404).json({ error: 'Factura no encontrada o ya anulada' });
+      return;
+    }
+    res.status(204).send();
+  }
+);
+
 export default router;

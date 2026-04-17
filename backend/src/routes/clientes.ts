@@ -83,6 +83,11 @@ router.post('/', verificarToken, requierePermiso('clientes', 'crear'),
       direccion, ciudad, documento_identidad, notas
     } = req.body;
 
+    if (!nombre?.trim() || !apellido?.trim() || !email?.trim() || !telefono?.trim() || !documento_identidad?.trim()) {
+      res.status(400).json({ error: 'Campos obligatorios: nombre, apellido, email, teléfono, documento_identidad' });
+      return;
+    }
+
     const resultado = await pool.query(
       `INSERT INTO clientes
          (nombre, apellido, email, telefono, telefono_alternativo,
@@ -120,6 +125,21 @@ router.put('/:id', verificarToken, requierePermiso('clientes', 'editar'),
       return;
     }
     res.json(resultado.rows[0]);
+  }
+);
+
+// PATCH /api/clientes/:id/desactivar
+router.patch('/:id/desactivar', verificarToken, requierePermiso('clientes', 'editar'),
+  async (req: Request, res: Response): Promise<void> => {
+    const resultado = await pool.query(
+      'UPDATE clientes SET activo = FALSE WHERE id = $1 AND activo = TRUE RETURNING id',
+      [req.params.id]
+    );
+    if (!resultado.rows[0]) {
+      res.status(404).json({ error: 'Cliente no encontrado' });
+      return;
+    }
+    res.status(204).send();
   }
 );
 

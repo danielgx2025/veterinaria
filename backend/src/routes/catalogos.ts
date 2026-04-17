@@ -66,4 +66,36 @@ router.get('/pacientes', verificarToken,
   }
 );
 
+// GET /api/catalogos/clientes
+router.get('/clientes', verificarToken,
+  async (_req: Request, res: Response): Promise<void> => {
+    const resultado = await pool.query(
+      `SELECT id, nombre, apellido, telefono, email
+       FROM clientes WHERE activo = TRUE ORDER BY apellido, nombre`
+    );
+    res.json(resultado.rows);
+  }
+);
+
+// GET /api/catalogos/productos
+router.get('/productos', verificarToken,
+  async (_req: Request, res: Response): Promise<void> => {
+    const resultado = await pool.query(
+      `SELECT id, nombre, precio_venta AS precio, stock_actual, unidad_medida
+       FROM productos WHERE activo = TRUE ORDER BY nombre`
+    );
+    res.json(resultado.rows);
+  }
+);
+
+// GET /api/catalogos/metodos_pago
+router.get('/metodos_pago', verificarToken,
+  async (_req: Request, res: Response): Promise<void> => {
+    const resultado = await pool.query(
+      `SELECT id, nombre FROM metodos_pago WHERE activo = TRUE ORDER BY nombre`
+    );
+    res.json(resultado.rows);
+  }
+);
+
 export default router;
