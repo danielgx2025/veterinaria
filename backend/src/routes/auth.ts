@@ -50,8 +50,8 @@ router.post('/login', async (req: Request, res: Response): Promise<void> => {
       rolNombre: usuario.rol_nombre,
       email: usuario.email,
     },
-    process.env.JWT_SECRET! || '3e5e9b8f2a1c4d7e6b0a9f8d7c6b5a4e3d2c1b0a9f8e7d6c5b4a3f2e1d0c9b8a',
-    { expiresIn: (process.env.JWT_EXPIRES_IN || '8h') as string }
+    process.env.JWT_SECRET!,
+    { expiresIn: '8h' }
   );
 
   res.json({
