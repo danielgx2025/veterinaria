@@ -20,10 +20,29 @@ interface ClienteOpcion {
   telefono?: string;
 }
 
+export interface PacienteEditar {
+  id: number;
+  nombre: string;
+  sexo: 'M' | 'H';
+  especie_id: number;
+  raza_id: number | null;
+  cliente_id: number;
+  dueño?: string;
+  fecha_nacimiento: string | null;
+  peso_kg: number | null;
+  color_pelaje: string | null;
+  microchip: string | null;
+  foto_url: string | null;
+  esterilizado: boolean;
+  notas: string | null;
+}
+
 export interface NuevoPacienteModalProps {
   abierto: boolean;
   onCerrar: () => void;
   onCreado: () => void;
+  pacienteEditar?: PacienteEditar | null;
+  onGuardado?: () => void;
 }
 
 interface FormPaciente {
@@ -132,7 +151,8 @@ const Fila = ({ children }: { children: React.ReactNode }) => (
   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--esp-3)' }}>{children}</div>
 );
 
-export default function NuevoPacienteModal({ abierto, onCerrar, onCreado }: NuevoPacienteModalProps) {
+export default function NuevoPacienteModal({ abierto, onCerrar, onCreado, pacienteEditar, onGuardado }: NuevoPacienteModalProps) {
+  const modoEdicion = !!pacienteEditar;
   const [form, setForm] = useState<FormPaciente>(FORMA_VACIA);
   const [errores, setErrores] = useState<Partial<Record<keyof FormPaciente, string>>>({});
   const [errorGlobal, setErrorGlobal] = useState('');
@@ -148,7 +168,27 @@ export default function NuevoPacienteModal({ abierto, onCerrar, onCreado }: Nuev
   // Cargar catálogos cuando el modal abre
   useEffect(() => {
     if (!abierto) return;
-    setForm(FORMA_VACIA);
+    if (pacienteEditar) {
+      const fechaStr = pacienteEditar.fecha_nacimiento
+        ? pacienteEditar.fecha_nacimiento.split('T')[0]
+        : '';
+      setForm({
+        nombre:           pacienteEditar.nombre,
+        sexo:             pacienteEditar.sexo,
+        especie_id:       String(pacienteEditar.especie_id),
+        raza_id:          pacienteEditar.raza_id != null ? String(pacienteEditar.raza_id) : '',
+        cliente_id:       String(pacienteEditar.cliente_id),
+        fecha_nacimiento: fechaStr,
+        peso_kg:          pacienteEditar.peso_kg != null ? String(pacienteEditar.peso_kg) : '',
+        color_pelaje:     pacienteEditar.color_pelaje ?? '',
+        microchip:        pacienteEditar.microchip ?? '',
+        foto_url:         pacienteEditar.foto_url ?? '',
+        esterilizado:     pacienteEditar.esterilizado,
+        notas:            pacienteEditar.notas ?? '',
+      });
+    } else {
+      setForm(FORMA_VACIA);
+    }
     setErrores({});
     setErrorGlobal('');
     setExito(false);
@@ -206,36 +246,55 @@ export default function NuevoPacienteModal({ abierto, onCerrar, onCreado }: Nuev
         'Content-Type': 'application/json',
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
       };
-      const res = await fetch('/api/pacientes', {
-        method: 'POST',
-        headers,
-        body: JSON.stringify({
-          cliente_id:       Number(form.cliente_id),
-          especie_id:       Number(form.especie_id),
-          raza_id:          form.raza_id ? Number(form.raza_id) : null,
-          nombre:           form.nombre.trim(),
-          sexo:             form.sexo,
-          fecha_nacimiento: form.fecha_nacimiento || null,
-          peso_kg:          form.peso_kg ? Number(form.peso_kg) : null,
-          color_pelaje:     form.color_pelaje.trim() || null,
-          microchip:        form.microchip.trim() || null,
-          foto_url:         form.foto_url.trim() || null,
-          esterilizado:     form.esterilizado,
-          notas:            form.notas.trim() || null,
-        }),
-      });
+
+      const url    = modoEdicion ? `/api/pacientes/${pacienteEditar!.id}` : '/api/pacientes';
+      const method = modoEdicion ? 'PUT' : 'POST';
+      const body   = modoEdicion
+        ? {
+            especie_id:       Number(form.especie_id),
+            raza_id:          form.raza_id ? Number(form.raza_id) : null,
+            nombre:           form.nombre.trim(),
+            sexo:             form.sexo,
+            fecha_nacimiento: form.fecha_nacimiento || null,
+            peso_kg:          form.peso_kg ? Number(form.peso_kg) : null,
+            color_pelaje:     form.color_pelaje.trim() || null,
+            microchip:        form.microchip.trim() || null,
+            foto_url:         form.foto_url.trim() || null,
+            esterilizado:     form.esterilizado,
+            notas:            form.notas.trim() || null,
+          }
+        : {
+            cliente_id:       Number(form.cliente_id),
+            especie_id:       Number(form.especie_id),
+            raza_id:          form.raza_id ? Number(form.raza_id) : null,
+            nombre:           form.nombre.trim(),
+            sexo:             form.sexo,
+            fecha_nacimiento: form.fecha_nacimiento || null,
+            peso_kg:          form.peso_kg ? Number(form.peso_kg) : null,
+            color_pelaje:     form.color_pelaje.trim() || null,
+            microchip:        form.microchip.trim() || null,
+            foto_url:         form.foto_url.trim() || null,
+            esterilizado:     form.esterilizado,
+            notas:            form.notas.trim() || null,
+          };
+
+      const res = await fetch(url, { method, headers, body: JSON.stringify(body) });
 
       if (res.status === 401) {
-        setErrorGlobal('No autenticado. Inicia sesión para registrar pacientes.');
+        setErrorGlobal('No autenticado. Inicia sesión para continuar.');
         return;
       }
       if (!res.ok) {
         const err = await res.json().catch(() => ({})) as { error?: string };
-        setErrorGlobal(err.error || 'Error al registrar. Intenta nuevamente.');
+        setErrorGlobal(err.error || (modoEdicion ? 'Error al guardar cambios.' : 'Error al registrar. Intenta nuevamente.'));
         return;
       }
       setExito(true);
-      setTimeout(() => { onCreado(); onCerrar(); }, 1400);
+      setTimeout(() => {
+        if (modoEdicion) { (onGuardado ?? onCreado)(); }
+        else { onCreado(); }
+        onCerrar();
+      }, 1400);
     } catch {
       setErrorGlobal('No se pudo conectar al servidor. Verifica que el backend esté corriendo.');
     } finally {
@@ -284,9 +343,9 @@ export default function NuevoPacienteModal({ abierto, onCerrar, onCreado }: Nuev
             <h2 style={{
               fontFamily: 'var(--fuente-display)', fontSize: 'var(--texto-xl)',
               fontWeight: 400, color: 'var(--ink-primario)', margin: 0,
-            }}>Registrar nuevo paciente</h2>
+            }}>{modoEdicion ? `Editar paciente` : 'Registrar nuevo paciente'}</h2>
             <p style={{ fontSize: 'var(--texto-xs)', color: 'var(--ink-terciario)', marginTop: 4 }}>
-              Los campos marcados con * son obligatorios
+              {modoEdicion ? `Modificando datos de ${pacienteEditar!.nombre}` : 'Los campos marcados con * son obligatorios'}
             </p>
           </div>
           <button
@@ -323,7 +382,7 @@ export default function NuevoPacienteModal({ abierto, onCerrar, onCreado }: Nuev
                 <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
                 <polyline points="22 4 12 14.01 9 11.01"/>
               </svg>
-              Paciente registrado exitosamente.
+              {modoEdicion ? 'Cambios guardados exitosamente.' : 'Paciente registrado exitosamente.'}
             </div>
           )}
 
@@ -340,9 +399,20 @@ export default function NuevoPacienteModal({ abierto, onCerrar, onCreado }: Nuev
           )}
 
           {/* ── PROPIETARIO ── */}
-          <SectionTitle>Propietario *</SectionTitle>
+          <SectionTitle>{modoEdicion ? 'Propietario' : 'Propietario *'}</SectionTitle>
 
-          {cargandoCatalogos ? (
+          {modoEdicion ? (
+            <Campo label="Propietario del paciente">
+              <input
+                value={pacienteEditar!.dueño ?? `ID ${pacienteEditar!.cliente_id}`}
+                readOnly
+                style={{ ...inputBase, background: 'var(--neutro-100, #F1F5F1)', color: 'var(--ink-terciario)', cursor: 'not-allowed' }}
+              />
+              <p style={{ fontSize: 'var(--texto-xs)', color: 'var(--ink-muted)', margin: '3px 0 0' }}>
+                El propietario no puede modificarse
+              </p>
+            </Campo>
+          ) : cargandoCatalogos ? (
             <div style={{ height: 80, borderRadius: 'var(--radio-md)', background: 'var(--neutro-200, #E5EEE9)', animation: 'pulseGray 1.5s ease-in-out infinite' }} />
           ) : clientes.length > 0 ? (
             <Campo label="Propietario del paciente" error={errores.cliente_id}>
@@ -580,7 +650,12 @@ export default function NuevoPacienteModal({ abierto, onCerrar, onCreado }: Nuev
                 <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
               </svg>
             )}
-            {enviando ? 'Registrando...' : exito ? 'Registrado ✓' : 'Registrar paciente'}
+            {enviando
+              ? (modoEdicion ? 'Guardando...' : 'Registrando...')
+              : exito
+                ? (modoEdicion ? 'Guardado ✓' : 'Registrado ✓')
+                : (modoEdicion ? 'Guardar cambios' : 'Registrar paciente')
+            }
           </button>
         </div>
       </div>
