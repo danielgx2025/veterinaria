@@ -11,6 +11,7 @@ interface PacienteCardProps {
   ultimaConsulta?: string;
   estado?: 'saludable' | 'en_tratamiento' | 'critico' | 'fallecido';
   onClick?: () => void;
+  onEditar?: () => void;
 }
 
 const COLOR_ESPECIE_DEFAULT: Record<string, string> = {
@@ -44,7 +45,7 @@ function EspecieInicial({ nombre, color }: { nombre: string; color: string }) {
 
 export default function PacienteCard({
   nombre, especie, raza, dueño, colorEspecie, fotoUrl,
-  ultimaConsulta, estado = 'saludable', onClick,
+  ultimaConsulta, estado = 'saludable', onClick, onEditar,
 }: PacienteCardProps) {
   const color = colorEspecie ?? COLOR_ESPECIE_DEFAULT[especie] ?? '#4A9068';
 
@@ -100,6 +101,7 @@ export default function PacienteCard({
           }}>
             {nombre}
           </span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--esp-2)', flexShrink: 0 }}>
           {/* Badge de especie */}
           <span style={{
             fontSize: 'var(--texto-xs)',
@@ -113,6 +115,36 @@ export default function PacienteCard({
           }}>
             {especie}
           </span>
+          {onEditar && (
+            <button
+              onClick={e => { e.stopPropagation(); onEditar(); }}
+              title="Editar paciente"
+              style={{
+                width: 26, height: 26,
+                border: '1px solid var(--borde-control)',
+                borderRadius: 'var(--radio-md)',
+                background: 'var(--superficie-base)',
+                cursor: 'pointer',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                color: 'var(--ink-secundario)',
+                padding: 0,
+              }}
+              onMouseEnter={e => {
+                (e.currentTarget as HTMLButtonElement).style.borderColor = color;
+                (e.currentTarget as HTMLButtonElement).style.color = color;
+              }}
+              onMouseLeave={e => {
+                (e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--borde-control)';
+                (e.currentTarget as HTMLButtonElement).style.color = 'var(--ink-secundario)';
+              }}
+            >
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+              </svg>
+            </button>
+          )}
+          </div>
         </div>
 
         {raza && (

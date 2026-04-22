@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import PacienteCard from '../components/PacienteCard';
-import NuevoPacienteModal from '../components/NuevoPacienteModal';
+import NuevoPacienteModal, { type PacienteEditar } from '../components/NuevoPacienteModal';
 
 interface Paciente {
   id: number;
@@ -32,6 +32,7 @@ export default function Pacientes() {
   const [filtroEspecie, setFiltroEspecie] = useState('Todos');
   const [cargando, setCargando] = useState(false);
   const [modalAbierto, setModalAbierto] = useState(false);
+  const [pacienteEditar, setPacienteEditar] = useState<PacienteEditar | null>(null);
   const [reloadKey, setReloadKey] = useState(0);
 
   useEffect(() => {
@@ -63,16 +64,43 @@ export default function Pacientes() {
      p.dueño.toLowerCase().includes(busqueda.toLowerCase()))
   );
 
-  const recargarPacientes = () => {
-    setReloadKey(k => k + 1);
+  const recargarPacientes = () => setReloadKey(k => k + 1);
+
+  const abrirEditar = async (id: number) => {
+    try {
+      const token = localStorage.getItem('token');
+      const headers: HeadersInit = token ? { Authorization: `Bearer ${token}` } : {};
+      const res = await fetch(`/api/pacientes/${id}`, { headers });
+      if (!res.ok) return;
+      const p = await res.json();
+      setPacienteEditar({
+        id:               p.id,
+        nombre:           p.nombre,
+        sexo:             p.sexo,
+        especie_id:       p.especie_id,
+        raza_id:          p.raza_id ?? null,
+        cliente_id:       p.cliente_id,
+        dueño:            p.dueño,
+        fecha_nacimiento: p.fecha_nacimiento ?? null,
+        peso_kg:          p.peso_kg != null ? Number(p.peso_kg) : null,
+        color_pelaje:     p.color_pelaje ?? null,
+        microchip:        p.microchip ?? null,
+        foto_url:         p.foto_url ?? null,
+        esterilizado:     p.esterilizado ?? false,
+        notas:            p.notas ?? null,
+      });
+      setModalAbierto(true);
+    } catch { /* silencioso */ }
   };
 
   return (
     <>
     <NuevoPacienteModal
       abierto={modalAbierto}
-      onCerrar={() => setModalAbierto(false)}
+      onCerrar={() => { setModalAbierto(false); setPacienteEditar(null); }}
       onCreado={recargarPacientes}
+      pacienteEditar={pacienteEditar}
+      onGuardado={recargarPacientes}
     />
     <div style={{ maxWidth: 'var(--ancho-contenido-max)', margin: '0 auto' }}>
       {/* Cabecera */}
@@ -205,6 +233,7 @@ export default function Pacientes() {
               ultimaConsulta={p.ultima_consulta}
               estado={p.fallecido ? 'fallecido' : 'saludable'}
               onClick={() => { /* abrir detalle */ }}
+              onEditar={() => abrirEditar(p.id)}
             />
           ))}
         </div>
