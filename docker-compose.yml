@@ -27,7 +27,7 @@ services:
     environment:
       NODE_ENV: production
       PORT: 3001
-      DB_HOST: db
+      DB_HOST: postgressql-server-ghxxy3
       DB_PORT: 5432
       DB_USERNAME: ${DB_USERNAME}
       DB_PASSWORD: ${DB_PASSWORD}

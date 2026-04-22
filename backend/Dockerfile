@@ -1,4 +1,4 @@
-FROM node:20-alpine AS builder
+FROM FROM public.ecr.aws/docker/library/node:20-alpine
 WORKDIR /app
 COPY package*.json ./
 RUN npm ci
