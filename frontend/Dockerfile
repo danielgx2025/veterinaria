@@ -1,4 +1,4 @@
-FROM FROM public.ecr.aws/nginx/nginx:1.27-alpine
+FROM public.ecr.aws/nginx/nginx:1.27-alpine
 WORKDIR /app
 COPY package*.json ./
 RUN npm ci
