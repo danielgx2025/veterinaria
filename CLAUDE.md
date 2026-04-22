@@ -26,6 +26,15 @@ npm run preview      # previsualizar el build de producción
 
 En dev, Vite proxea `/api/*` → `http://localhost:3001` (ver `vite.config.ts`). No se necesita CORS ni URL absoluta en el frontend.
 
+> **Nota:** `vite.config.ts` tiene `proxy` apuntando a `http://localhost:3000` — debería ser `3001`. Si el proxy no funciona, corregir `server.proxy` en ese archivo.
+
+### Docker (desarrollo local)
+```bash
+docker-compose -f docker-compose.dev.yml up    # levanta PostgreSQL 17 + backend + frontend
+docker-compose -f docker-compose.dev.yml down  # detener y limpiar
+```
+Útil cuando no se quiere instalar PostgreSQL localmente. El stack monta volúmenes para hot-reload en backend y frontend.
+
 ### Base de datos (PostgreSQL 17 en Windows)
 ```bash
 # Ruta de binarios: C:\Program Files\PostgreSQL\17\bin\
@@ -119,6 +128,12 @@ Puntos críticos:
 - **Números** — siempre `font-family: var(--fuente-mono)` + `font-variant-numeric: tabular-nums`.
 - **Hover en componentes** — cambiar borde/color, no background. Cada elemento necesita 4 estados: default, hover, active, disabled.
 - **Never blank** — mostrar skeleton o empty state explícito, nunca contenedor vacío.
+
+---
+
+## Tests
+
+No hay suite de tests configurada (no Jest, Vitest, ni Mocha). Las verificaciones se hacen manualmente con el servidor corriendo.
 
 ---
 

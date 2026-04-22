@@ -10,6 +10,7 @@ import facturacionRoutes from './routes/facturacion';
 import dashboardRoutes from './routes/dashboard';
 import catalogosRoutes from './routes/catalogos';
 import citasRoutes from './routes/citas';
+import usuariosRoutes from './routes/usuarios';
 
 dotenv.config();
 
@@ -28,6 +29,7 @@ app.use('/api/facturas',  facturacionRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/catalogos', catalogosRoutes);
 app.use('/api/citas',     citasRoutes);
+app.use('/api/usuarios',  usuariosRoutes);
 
 // Health check
 app.get('/health', (_req, res) => res.json({ status: 'ok', timestamp: new Date() }));

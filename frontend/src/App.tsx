@@ -9,6 +9,8 @@ import Consultas from './pages/Consultas';
 import Facturacion from './pages/Facturacion';
 import Citas from './pages/Citas';
 import Clientes from './pages/Clientes';
+import Usuarios from './pages/Usuarios';
+import AdminRoute from './components/AdminRoute';
 
 export default function App() {
   return (
@@ -45,6 +47,7 @@ export default function App() {
                     <Route path="/facturacion" element={<Facturacion />} />
                     <Route path="/citas"       element={<Citas />} />
                     <Route path="/clientes"   element={<Clientes />} />
+                    <Route path="/usuarios"   element={<AdminRoute><Usuarios /></AdminRoute>} />
                   </Routes>
                 </main>
               </div>

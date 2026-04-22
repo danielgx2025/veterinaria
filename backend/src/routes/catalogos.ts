@@ -98,4 +98,14 @@ router.get('/metodos_pago', verificarToken,
   }
 );
 
+// GET /api/catalogos/roles
+router.get('/roles', verificarToken,
+  async (_req: Request, res: Response): Promise<void> => {
+    const resultado = await pool.query(
+      `SELECT id, nombre FROM roles WHERE activo = TRUE ORDER BY nombre`
+    );
+    res.json(resultado.rows);
+  }
+);
+
 export default router;
