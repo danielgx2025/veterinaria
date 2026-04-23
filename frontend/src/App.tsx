@@ -10,6 +10,8 @@ import Facturacion from './pages/Facturacion';
 import Citas from './pages/Citas';
 import Clientes from './pages/Clientes';
 import Usuarios from './pages/Usuarios';
+import Roles from './pages/Roles';
+import RolesPermisos from './pages/RolesPermisos';
 import AdminRoute from './components/AdminRoute';
 
 export default function App() {
@@ -47,7 +49,9 @@ export default function App() {
                     <Route path="/facturacion" element={<Facturacion />} />
                     <Route path="/citas"       element={<Citas />} />
                     <Route path="/clientes"   element={<Clientes />} />
-                    <Route path="/usuarios"   element={<AdminRoute><Usuarios /></AdminRoute>} />
+                    <Route path="/usuarios"        element={<AdminRoute><Usuarios /></AdminRoute>} />
+                    <Route path="/roles"           element={<AdminRoute><Roles /></AdminRoute>} />
+                    <Route path="/roles-permisos"  element={<AdminRoute><RolesPermisos /></AdminRoute>} />
                   </Routes>
                 </main>
               </div>

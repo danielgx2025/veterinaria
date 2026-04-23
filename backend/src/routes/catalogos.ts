@@ -108,4 +108,15 @@ router.get('/roles', verificarToken,
   }
 );
 
+// GET /api/catalogos/permisos
+router.get('/permisos', verificarToken,
+  async (_req: Request, res: Response): Promise<void> => {
+    const resultado = await pool.query(
+      `SELECT id, recurso, accion, descripcion
+       FROM permisos WHERE activo = TRUE ORDER BY recurso, accion`
+    );
+    res.json(resultado.rows);
+  }
+);
+
 export default router;

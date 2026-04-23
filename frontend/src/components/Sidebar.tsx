@@ -67,6 +67,38 @@ const navItems = [
   },
 ];
 
+const seguridadItems = [
+  {
+    to: '/usuarios',
+    label: 'Usuarios',
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        <circle cx="12" cy="11" r="3"/>
+      </svg>
+    ),
+  },
+  {
+    to: '/roles',
+    label: 'Roles',
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+      </svg>
+    ),
+  },
+  {
+    to: '/roles-permisos',
+    label: 'Permisos de Roles',
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+      </svg>
+    ),
+  },
+];
+
 export default function Sidebar() {
   const navigate = useNavigate();
   const [usuario, setUsuario] = useState<UsuarioLocal | null>(null);
@@ -143,7 +175,9 @@ export default function Sidebar() {
       </div>
 
       {/* Navegación */}
-      <nav style={{ flex: 1, padding: '0 var(--esp-3)' }}>
+      <nav style={{ flex: 1, padding: '0 var(--esp-3)', overflowY: 'auto' }}>
+
+        {/* Sección Principal */}
         <div style={{
           fontSize: 'var(--texto-xs)',
           fontWeight: 'var(--peso-semibold)',
@@ -155,15 +189,13 @@ export default function Sidebar() {
         }}>
           Principal
         </div>
-        <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 'var(--esp-1)' }}>
+        <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 'var(--esp-1)', marginBottom: 'var(--esp-5)' }}>
           {navItems.map(({ to, label, icon }) => (
             <li key={to}>
               <NavLink
                 to={to}
                 style={({ isActive }) => ({
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 'var(--esp-3)',
+                  display: 'flex', alignItems: 'center', gap: 'var(--esp-3)',
                   padding: 'var(--esp-2) var(--esp-3)',
                   borderRadius: 'var(--radio-md)',
                   textDecoration: 'none',
@@ -179,35 +211,47 @@ export default function Sidebar() {
               </NavLink>
             </li>
           ))}
-          {usuario?.rol === 'Admin' && (
-            <li>
-              <NavLink
-                to="/usuarios"
-                style={({ isActive }) => ({
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 'var(--esp-3)',
-                  padding: 'var(--esp-2) var(--esp-3)',
-                  borderRadius: 'var(--radio-md)',
-                  textDecoration: 'none',
-                  fontSize: 'var(--texto-sm)',
-                  fontWeight: isActive ? 'var(--peso-semibold)' : 'var(--peso-normal)',
-                  color: isActive ? 'var(--verde-700)' : 'var(--ink-secundario)',
-                  background: isActive ? 'var(--verde-100)' : 'transparent',
-                  transition: 'all var(--transicion-rapida)',
-                })}
-              >
-                <span style={{ color: 'inherit', display: 'flex', flexShrink: 0 }}>
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                    <circle cx="12" cy="11" r="3"/>
-                  </svg>
-                </span>
-                Usuarios
-              </NavLink>
-            </li>
-          )}
         </ul>
+
+        {/* Sección Seguridad — solo Admin */}
+        {usuario?.rol === 'Admin' && (
+          <>
+            <div style={{
+              fontSize: 'var(--texto-xs)',
+              fontWeight: 'var(--peso-semibold)',
+              color: 'var(--ink-terciario)',
+              letterSpacing: 'var(--tracking-muy-amplio)',
+              textTransform: 'uppercase',
+              padding: '0 var(--esp-3)',
+              marginBottom: 'var(--esp-2)',
+            }}>
+              Seguridad
+            </div>
+            <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 'var(--esp-1)' }}>
+              {seguridadItems.map(({ to, label, icon }) => (
+                <li key={to}>
+                  <NavLink
+                    to={to}
+                    style={({ isActive }) => ({
+                      display: 'flex', alignItems: 'center', gap: 'var(--esp-3)',
+                      padding: 'var(--esp-2) var(--esp-3)',
+                      borderRadius: 'var(--radio-md)',
+                      textDecoration: 'none',
+                      fontSize: 'var(--texto-sm)',
+                      fontWeight: isActive ? 'var(--peso-semibold)' : 'var(--peso-normal)',
+                      color: isActive ? 'var(--verde-700)' : 'var(--ink-secundario)',
+                      background: isActive ? 'var(--verde-100)' : 'transparent',
+                      transition: 'all var(--transicion-rapida)',
+                    })}
+                  >
+                    <span style={{ color: 'inherit', display: 'flex', flexShrink: 0 }}>{icon}</span>
+                    {label}
+                  </NavLink>
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
       </nav>
 
       {/* Usuario + logout */}
