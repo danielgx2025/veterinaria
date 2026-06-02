@@ -19,14 +19,6 @@ services:
     networks:
       - dokploy-network
       - default
-    labels:
-      - traefik.enable=true
-      - traefik.docker.network=dokploy-network
-      # Enrutamiento único para el Backend
-      - traefik.http.routers.veterinaria-backend.rule=Host(`veterinaria-bowhru-c0c7e0-149-50-139-62.sslip.io`)
-      - traefik.http.routers.veterinaria-backend.entrypoints=web
-      - traefik.http.services.veterinaria-backend.loadbalancer.server.port=3001
-
 
   frontend:
     build:
@@ -39,15 +31,6 @@ services:
     networks:
       - dokploy-network
       - default
-    labels:
-      - traefik.enable=true
-      - traefik.docker.network=dokploy-network
-      # Enrutamiento único para el Frontend
-      - traefik.http.routers.veterinaria-frontend.rule=Host(`veterinaria-bowhru-45e140-149-50-139-62.sslip.io`)
-      - traefik.http.routers.veterinaria-frontend.entrypoints=web
-      # Ajustamos el puerto interno: Dejalo en 80 si tu Dockerfile usa Nginx para producción, 
-      # o cambialo a 5173 si levanta un servidor de Node directo.
-      - traefik.http.services.veterinaria-frontend.loadbalancer.server.port=80
 
 networks:
   dokploy-network:
