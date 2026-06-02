@@ -18,7 +18,14 @@ services:
       FRONTEND_URL: ${FRONTEND_URL}
     networks:
       - dokploy-network # Para que pueda hablar con la red del panel
-
+    labels:
+          - traefik.docker.network=dokploy-network
+          # ACTUALIZADO: Cambiado al nuevo dominio del backend
+          - traefik.http.routers.veterinaria-veterinaria-bowhru-7-web.rule=Host(`veterinaria-bowhru-c0c7e0-149-50-139-62.sslip.io`)
+          - traefik.http.routers.veterinaria-veterinaria-bowhru-7-web.entrypoints=web
+          - traefik.http.services.veterinaria-veterinaria-bowhru-7-web.loadbalancer.server.port=3001
+          - traefik.http.routers.veterinaria-veterinaria-bowhru-7-web.service=veterinaria-veterinaria-bowhru-7-web
+          - traefik.enable=true
 
   frontend:
     build:
@@ -31,6 +38,17 @@ services:
       - "${APP_PORT:-5173}:5173"
     networks:
       - dokploy-network
+      - default
+    labels:
+      - traefik.docker.network=dokploy-network
+      # ACTUALIZADO: Cambiado al nuevo dominio del frontend
+      - traefik.http.routers.veterinaria-veterinaria-bowhru-6-web.rule=Host(`veterinaria-bowhru-45e140-149-50-139-62.sslip.io`)
+      - traefik.http.routers.veterinaria-veterinaria-bowhru-6-web.entrypoints=web
+      # NOTA: Dejalo en 80 si tu contenedor de producción usa Nginx/Apache internamente para servir el build estático.
+      # Si por el contrario levanta un servidor de desarrollo tipo Vite en producción, cambialo a 5173.
+      - traefik.http.services.veterinaria-veterinaria-bowhru-6-web.loadbalancer.server.port=80
+      - traefik.http.routers.veterinaria-veterinaria-bowhru-6-web.service=veterinaria-veterinaria-bowhru-6-web
+      - traefik.enable=true      
     
 
 networks:
