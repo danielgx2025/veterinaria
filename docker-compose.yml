@@ -17,15 +17,15 @@ services:
       JWT_REFRESH_EXPIRES_IN: ${JWT_REFRESH_EXPIRES_IN:-7d}
       FRONTEND_URL: ${FRONTEND_URL}
     networks:
-      - dokploy-network # Para que pueda hablar con la red del panel
+      - dokploy-network
+      - default
     labels:
-          - traefik.docker.network=dokploy-network
-          # ACTUALIZADO: Cambiado al nuevo dominio del backend
-          - traefik.http.routers.veterinaria-veterinaria-bowhru-7-web.rule=Host(`veterinaria-bowhru-c0c7e0-149-50-139-62.sslip.io`)
-          - traefik.http.routers.veterinaria-veterinaria-bowhru-7-web.entrypoints=web
-          - traefik.http.services.veterinaria-veterinaria-bowhru-7-web.loadbalancer.server.port=3001
-          - traefik.http.routers.veterinaria-veterinaria-bowhru-7-web.service=veterinaria-veterinaria-bowhru-7-web
-          - traefik.enable=true
+      - traefik.enable=true
+      - traefik.docker.network=dokploy-network
+      # Enrutamiento único para el Backend
+      - traefik.http.routers.veterinaria-backend.rule=Host(`veterinaria-bowhru-c0c7e0-149-50-139-62.sslip.io`)
+      - traefik.http.routers.veterinaria-backend.entrypoints=web
+      - traefik.http.services.veterinaria-backend.loadbalancer.server.port=3001
 
   frontend:
     build:
@@ -34,22 +34,19 @@ services:
     restart: unless-stopped
     depends_on:
       - backend
-    ports:
-      - "${APP_PORT:-5173}:5173"
+    # Quitamos la sección 'ports' expuesta para que no choque con Traefik
     networks:
       - dokploy-network
       - default
     labels:
+      - traefik.enable=true
       - traefik.docker.network=dokploy-network
-      # ACTUALIZADO: Cambiado al nuevo dominio del frontend
-      - traefik.http.routers.veterinaria-veterinaria-bowhru-6-web.rule=Host(`veterinaria-bowhru-45e140-149-50-139-62.sslip.io`)
-      - traefik.http.routers.veterinaria-veterinaria-bowhru-6-web.entrypoints=web
-      # NOTA: Dejalo en 80 si tu contenedor de producción usa Nginx/Apache internamente para servir el build estático.
-      # Si por el contrario levanta un servidor de desarrollo tipo Vite en producción, cambialo a 5173.
-      - traefik.http.services.veterinaria-veterinaria-bowhru-6-web.loadbalancer.server.port=80
-      - traefik.http.routers.veterinaria-veterinaria-bowhru-6-web.service=veterinaria-veterinaria-bowhru-6-web
-      - traefik.enable=true      
-    
+      # Enrutamiento único para el Frontend
+      - traefik.http.routers.veterinaria-frontend.rule=Host(`veterinaria-bowhru-45e140-149-50-139-62.sslip.io`)
+      - traefik.http.routers.veterinaria-frontend.entrypoints=web
+      # Ajustamos el puerto interno: Dejalo en 80 si tu Dockerfile usa Nginx para producción, 
+      # o cambialo a 5173 si levanta un servidor de Node directo.
+      - traefik.http.services.veterinaria-frontend.loadbalancer.server.port=80
 
 networks:
   dokploy-network:
