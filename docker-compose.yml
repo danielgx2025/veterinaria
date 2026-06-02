@@ -27,6 +27,7 @@ services:
       - traefik.http.routers.veterinaria-backend.entrypoints=web
       - traefik.http.services.veterinaria-backend.loadbalancer.server.port=3001
 
+
   frontend:
     build:
       context: ./frontend
