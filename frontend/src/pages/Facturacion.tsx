@@ -13,12 +13,6 @@ interface Factura {
   emitida_por: string;
 }
 
-const FACTURAS_EJEMPLO: Factura[] = [
-  { id: 1, numero_factura: 'FAC-2026-000001', cliente: 'Martínez, Carlos', fecha_emision: new Date().toISOString(), total: 85.00,  total_pagado: 85.00, estado: 'pagada',   emitida_por: 'Admin' },
-  { id: 2, numero_factura: 'FAC-2026-000002', cliente: 'Rodríguez, Ana',   fecha_emision: new Date(Date.now() - 3600000).toISOString(), total: 120.00, total_pagado: 60.00, estado: 'parcial',  emitida_por: 'Admin' },
-  { id: 3, numero_factura: 'FAC-2026-000003', cliente: 'Pérez, Luis',      fecha_emision: new Date(Date.now() - 86400000).toISOString(), total: 35.00, total_pagado: 0, estado: 'pendiente', emitida_por: 'Admin' },
-];
-
 const ESTADO_CONFIG: Record<string, { color: string; bg: string; label: string }> = {
   borrador:  { color: '#6E8C7A', bg: '#F2F7F4', label: 'Borrador' },
   pendiente: { color: '#2C5F8A', bg: '#E8F1F8', label: 'Pendiente' },
@@ -29,7 +23,7 @@ const ESTADO_CONFIG: Record<string, { color: string; bg: string; label: string }
 };
 
 export default function Facturacion() {
-  const [facturas,     setFacturas]     = useState<Factura[]>(FACTURAS_EJEMPLO);
+  const [facturas,     setFacturas]     = useState<Factura[]>([]);
   const [filtroEstado, setFiltroEstado] = useState('todos');
   const [cargando,     setCargando]     = useState(false);
   const [reloadKey,    setReloadKey]    = useState(0);
@@ -49,7 +43,7 @@ export default function Facturacion() {
         const res = await fetch(`/api/facturas?${params}`, { headers: h });
         if (res.ok) {
           const datos = await res.json();
-          setFacturas(Array.isArray(datos) ? datos : FACTURAS_EJEMPLO);
+          setFacturas(Array.isArray(datos) ? datos : []);
         }
       } catch {
         // usar datos de ejemplo

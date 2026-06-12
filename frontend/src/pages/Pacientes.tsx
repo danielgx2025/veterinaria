@@ -14,20 +14,10 @@ interface Paciente {
   fallecido: boolean;
 }
 
-// Datos de ejemplo
-const PACIENTES_EJEMPLO: Paciente[] = [
-  { id: 1, nombre: 'Firulais', especie: 'Perro', raza: 'Labrador Retriever', dueño: 'Carlos Martínez', color_acento: '#D4850A', fallecido: false, ultima_consulta: new Date(Date.now() - 7 * 86400000).toISOString() },
-  { id: 2, nombre: 'Mishi', especie: 'Gato', raza: 'Persa', dueño: 'Ana Rodríguez', color_acento: '#6B48B8', fallecido: false, ultima_consulta: new Date(Date.now() - 3 * 86400000).toISOString() },
-  { id: 3, nombre: 'Rocky', especie: 'Perro', raza: 'Rottweiler', dueño: 'Luis Pérez', color_acento: '#D4850A', fallecido: false },
-  { id: 4, nombre: 'Piolín', especie: 'Ave', dueño: 'María García', color_acento: '#0891B2', fallecido: false, ultima_consulta: new Date(Date.now() - 14 * 86400000).toISOString() },
-  { id: 5, nombre: 'Luna', especie: 'Gato', raza: 'Siamés', dueño: 'Roberto López', color_acento: '#6B48B8', fallecido: false },
-  { id: 6, nombre: 'Toby', especie: 'Perro', raza: 'Beagle', dueño: 'Carmen Soto', color_acento: '#D4850A', fallecido: false, ultima_consulta: new Date().toISOString() },
-];
-
 const ESPECIES_FILTRO = ['Todos', 'Perro', 'Gato', 'Ave', 'Conejo', 'Exótico'];
 
 export default function Pacientes() {
-  const [pacientes, setPacientes] = useState<Paciente[]>(PACIENTES_EJEMPLO);
+  const [pacientes, setPacientes] = useState<Paciente[]>([]);
   const [busqueda, setBusqueda] = useState('');
   const [filtroEspecie, setFiltroEspecie] = useState('Todos');
   const [cargando, setCargando] = useState(false);
@@ -46,7 +36,7 @@ export default function Pacientes() {
         const res = await fetch(`/api/pacientes?${params}`, { headers });
         if (res.ok) {
           const datos = await res.json();
-          setPacientes(datos.data ?? PACIENTES_EJEMPLO);
+          setPacientes(datos.data ?? []);
         }
       } catch {
         // usar datos de ejemplo

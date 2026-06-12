@@ -19,14 +19,6 @@ interface Cita {
   notas?: string;
 }
 
-const CITAS_EJEMPLO: Cita[] = [
-  { id: 1, paciente_id: 1, veterinario_id: 1, servicio_id: 1, paciente: 'Firulais', especie: 'Perro', color_especie: '#D4850A', dueño: 'Carlos M.', telefono: '555-1234', servicio: 'Vacunación Antirrábica', veterinario: 'Dra. García', fecha_hora_inicio: new Date(new Date().setHours(9, 0)).toISOString(), fecha_hora_fin: new Date(new Date().setHours(9, 30)).toISOString(), estado: 'confirmada' },
-  { id: 2, paciente_id: 2, veterinario_id: 2, servicio_id: 2, paciente: 'Mishi', especie: 'Gato', color_especie: '#6B48B8', dueño: 'Ana R.', telefono: '555-5678', servicio: 'Consulta General', veterinario: 'Dr. López', fecha_hora_inicio: new Date(new Date().setHours(10, 0)).toISOString(), fecha_hora_fin: new Date(new Date().setHours(10, 30)).toISOString(), estado: 'programada' },
-  { id: 3, paciente_id: 3, veterinario_id: 1, servicio_id: 3, paciente: 'Rocky', especie: 'Perro', color_especie: '#D4850A', dueño: 'Luis P.', telefono: '555-9012', servicio: 'Desparasitación', veterinario: 'Dra. García', fecha_hora_inicio: new Date(new Date().setHours(11, 0)).toISOString(), fecha_hora_fin: new Date(new Date().setHours(11, 15)).toISOString(), estado: 'en_curso' },
-  { id: 4, paciente_id: 4, veterinario_id: 2, servicio_id: 2, paciente: 'Piolín', especie: 'Ave', color_especie: '#0891B2', dueño: 'María G.', telefono: '555-3456', servicio: 'Consulta General', veterinario: 'Dr. López', fecha_hora_inicio: new Date(new Date().setHours(14, 0)).toISOString(), fecha_hora_fin: new Date(new Date().setHours(14, 30)).toISOString(), estado: 'programada' },
-  { id: 5, paciente_id: 5, veterinario_id: 1, servicio_id: 4, paciente: 'Luna', especie: 'Gato', color_especie: '#6B48B8', dueño: 'Roberto L.', telefono: '555-7890', servicio: 'Castración', veterinario: 'Dra. García', fecha_hora_inicio: new Date(new Date().setHours(15, 30)).toISOString(), fecha_hora_fin: new Date(new Date().setHours(17, 0)).toISOString(), estado: 'programada' },
-];
-
 const ESTADO_CONFIG: Record<string, { color: string; bg: string; label: string }> = {
   programada:      { color: '#2C5F8A', bg: '#E8F1F8', label: 'Programada' },
   confirmada:      { color: '#2A7A52', bg: '#EBF5EE', label: 'Confirmada' },
@@ -39,7 +31,7 @@ const ESTADO_CONFIG: Record<string, { color: string; bg: string; label: string }
 const HORAS = Array.from({ length: 12 }, (_, i) => `${String(i + 8).padStart(2, '0')}:00`);
 
 export default function Citas() {
-  const [citas, setCitas] = useState<Cita[]>(CITAS_EJEMPLO);
+  const [citas, setCitas] = useState<Cita[]>([]);
   const [vistaTipo, setVistaTipo] = useState<'lista' | 'timeline'>('timeline');
   const [reloadKey, setReloadKey] = useState(0);
   const [modalAbierto, setModalAbierto] = useState(false);
@@ -56,7 +48,7 @@ export default function Citas() {
         const res = await fetch(`/api/citas?fecha=${today}`, { headers });
         if (res.ok) {
           const datos = await res.json();
-          setCitas(datos.data ?? CITAS_EJEMPLO);
+          setCitas(datos.data ?? []);
         }
       } catch {
         // usar datos de ejemplo

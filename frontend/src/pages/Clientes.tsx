@@ -17,14 +17,8 @@ interface Cliente {
   total_mascotas: number | string;
 }
 
-const CLIENTES_EJEMPLO: Cliente[] = [
-  { id: 1, nombre: 'Carlos', apellido: 'Martínez', email: 'carlos@example.com', telefono: '+54 9 11 1234-5678', telefono_alternativo: null, direccion: 'Av. Corrientes 1234', ciudad: 'Buenos Aires', documento_identidad: '28456789', notas: null, activo: true, fecha_creacion: new Date(Date.now() - 30 * 86400000).toISOString(), total_mascotas: 2 },
-  { id: 2, nombre: 'Ana', apellido: 'Rodríguez', email: 'ana@example.com', telefono: '+54 9 11 8765-4321', telefono_alternativo: null, direccion: null, ciudad: 'Córdoba', documento_identidad: '33112233', notas: null, activo: true, fecha_creacion: new Date(Date.now() - 15 * 86400000).toISOString(), total_mascotas: 1 },
-  { id: 3, nombre: 'Luis', apellido: 'Pérez', email: 'luis@example.com', telefono: '+54 9 351 555-1234', telefono_alternativo: null, direccion: 'San Martín 567', ciudad: 'Rosario', documento_identidad: '25987654', notas: null, activo: true, fecha_creacion: new Date(Date.now() - 5 * 86400000).toISOString(), total_mascotas: 3 },
-];
-
 export default function Clientes() {
-  const [clientes, setClientes] = useState<Cliente[]>(CLIENTES_EJEMPLO);
+  const [clientes, setClientes] = useState<Cliente[]>([]);
   const [busqueda, setBusqueda] = useState('');
   const [cargando, setCargando] = useState(false);
   const [reloadKey, setReloadKey] = useState(0);
@@ -43,7 +37,7 @@ export default function Clientes() {
         const res = await fetch(`/api/clientes?${params}&limit=100`, { headers });
         if (res.ok) {
           const datos = await res.json();
-          setClientes(Array.isArray(datos) ? datos : CLIENTES_EJEMPLO);
+          setClientes(Array.isArray(datos) ? datos : []);
         }
       } catch {
         // usar datos de ejemplo
