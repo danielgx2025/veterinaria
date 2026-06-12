@@ -33,6 +33,7 @@ services:
       - default
     labels:
       - "traefik.enable=true"
+      - "traefik.docker.network=dokploy-network" # <--- ESTO ES LA CLAVE
       - "traefik.http.routers.frontend.rule=Host(`veterinaria-bowhru-10a5ca-149-50-139-62.sslip.io`)"
       - "traefik.http.services.frontend.loadbalancer.server.port=80"      
 
