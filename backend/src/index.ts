@@ -18,7 +18,10 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-app.use(cors({ origin: process.env.FRONTEND_URL || 'http://localhost:5173' }));
+// El header Origin del navegador nunca lleva barra final ni espacios
+const FRONTEND_URL = (process.env.FRONTEND_URL || 'http://localhost:5173').trim().replace(/\/+$/, '');
+
+app.use(cors({ origin: FRONTEND_URL }));
 app.use(express.json());
 
 // Rutas
