@@ -27,6 +27,8 @@ services:
     restart: unless-stopped
     depends_on:
       - backend
+    ports:
+      - "9090:80"      
     # Quitamos la sección 'ports' expuesta para que no choque con Traefik
     networks:
       - dokploy-network
