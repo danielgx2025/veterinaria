@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Sidebar from './components/Sidebar';
 import Header from './components/Header';
@@ -15,6 +16,18 @@ import RolesPermisos from './pages/RolesPermisos';
 import AdminRoute from './components/AdminRoute';
 
 export default function App() {
+  const [colapsado, setColapsado] = useState(
+    () => localStorage.getItem('sidebar-colapsado') === 'true'
+  );
+
+  const toggleSidebar = () => {
+    setColapsado(prev => {
+      const nuevo = !prev;
+      localStorage.setItem('sidebar-colapsado', String(nuevo));
+      return nuevo;
+    });
+  };
+
   return (
     <BrowserRouter>
       <Routes>
@@ -27,7 +40,7 @@ export default function App() {
               overflow: 'hidden',
               background: 'var(--superficie-canvas)',
             }}>
-              <Sidebar />
+              <Sidebar colapsado={colapsado} />
               <div style={{
                 flex: 1,
                 display: 'flex',
@@ -35,7 +48,7 @@ export default function App() {
                 overflow: 'hidden',
                 minWidth: 0,
               }}>
-                <Header />
+                <Header onToggleSidebar={toggleSidebar} />
                 <main style={{
                   flex: 1,
                   overflow: 'auto',

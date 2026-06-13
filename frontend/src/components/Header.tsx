@@ -27,7 +27,18 @@ function CampanaIcon() {
   );
 }
 
-export default function Header() {
+function MenuIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+         stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <line x1="3" y1="6" x2="21" y2="6"/>
+      <line x1="3" y1="12" x2="21" y2="12"/>
+      <line x1="3" y1="18" x2="21" y2="18"/>
+    </svg>
+  );
+}
+
+export default function Header({ onToggleSidebar }: { onToggleSidebar: () => void }) {
   const { pathname } = useLocation();
   const info = titulos[pathname] ?? { titulo: 'VetSystem', subtitulo: '' };
 
@@ -43,7 +54,27 @@ export default function Header() {
       flexShrink: 0,
     }}>
       {/* Título de página */}
-      <div style={{ display: 'flex', alignItems: 'baseline', gap: 'var(--esp-3)' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--esp-3)' }}>
+        <button
+          onClick={onToggleSidebar}
+          aria-label="Alternar menú"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: 36,
+            height: 36,
+            borderRadius: 'var(--radio-md)',
+            border: '1px solid var(--borde-sutil)',
+            background: 'var(--superficie-base)',
+            color: 'var(--ink-secundario)',
+            cursor: 'pointer',
+            flexShrink: 0,
+            transition: 'background var(--transicion-rapida)',
+          }}
+        >
+          <MenuIcon />
+        </button>
         <h1 style={{
           fontFamily: 'var(--fuente-display)',
           fontSize: 'var(--texto-xl)',

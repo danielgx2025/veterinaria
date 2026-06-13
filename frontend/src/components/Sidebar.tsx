@@ -99,7 +99,7 @@ const seguridadItems = [
   },
 ];
 
-export default function Sidebar() {
+export default function Sidebar({ colapsado }: { colapsado: boolean }) {
   const navigate = useNavigate();
   const [usuario, setUsuario] = useState<UsuarioLocal | null>(null);
 
@@ -122,16 +122,23 @@ export default function Sidebar() {
 
   return (
     <aside style={{
-      width: 'var(--ancho-sidebar)',
-      minWidth: 'var(--ancho-sidebar)',
+      width: colapsado ? 0 : 'var(--ancho-sidebar)',
+      minWidth: colapsado ? 0 : 'var(--ancho-sidebar)',
       height: '100vh',
-      background: 'var(--superficie-base)',
-      borderRight: '1px solid var(--borde-normal)',
-      display: 'flex',
-      flexDirection: 'column',
-      padding: 'var(--esp-4) 0',
+      borderRight: colapsado ? 'none' : '1px solid var(--borde-normal)',
+      overflow: 'hidden',
       flexShrink: 0,
+      transition: 'width var(--transicion-lenta), min-width var(--transicion-lenta)',
     }}>
+      <div style={{
+        width: 'var(--ancho-sidebar)',
+        height: '100%',
+        background: 'var(--superficie-base)',
+        display: 'flex',
+        flexDirection: 'column',
+        padding: 'var(--esp-4) 0',
+        flexShrink: 0,
+      }}>
       {/* Logo */}
       <div style={{
         padding: 'var(--esp-2) var(--esp-5)',
@@ -320,6 +327,7 @@ export default function Sidebar() {
           </svg>
           Cerrar sesión
         </button>
+      </div>
       </div>
     </aside>
   );
